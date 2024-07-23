@@ -7,6 +7,7 @@ use App\Models\Comment;
 use Filament\Forms\Get;
 use Filament\Forms\Form;
 use Filament\Pages\Page;
+use Illuminate\Support\Str;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Contracts\HasForms;
@@ -41,17 +42,13 @@ class Settings extends Page implements HasForms
                     Wizard\Step::make("Step 2")
                         ->schema(function (Get $get) {
                             return Comment::query()
+                                // If the `CheckboxList` is not dynamically generated, then the CheckboxList will work as expected:
+                                // Ex: ->where('user_id', auth()->id())
                                 ->where('user_id', $get('user_id'))
                                 ->get()
                                 ->groupBy('category')
                                 ->map(function ($comments, $category) {
-                                    return CheckboxList::make('comments-' . $category)
-                                        ->label($category)
-                                        ->options($comments->pluck('content', 'id')
-                                            ->toArray())
-                                        ->bulkToggleable()
-                                        ->searchable()
-                                        ->columns(2);
+                                    return CheckboxList::make('comments-' . Str::slug($category))->options($comments->pluck('content', 'id')->toArray());
                                 })->toArray();
                         }),
                 ]),
