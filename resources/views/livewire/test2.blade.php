@@ -1,5 +1,5 @@
 <div class="grid min-h-screen grid-cols-5 gap-4 p-10 bg-gray-200 lg:grid-cols-10">
-    @for($i = 0; $i < 40; $i++)
+    @for($i = 0; $i < 50; $i++)
         <div class="flex justify-center">
             <div x-data="{
                 open: false,
@@ -26,7 +26,7 @@
                 <div x-ref="panel" x-show="open" x-transition.origin.top.left x-on:click.outside="close($refs.button)"
                     :id="$id('dropdown-button')" style="display: none;"
                     class="absolute left-0 z-10 w-40 mt-2 bg-white rounded-md shadow-md">
-                    @livewire('test2-submenu')
+                    <livewire:test2-submenu key="{{ $i }}" lazy />
                 </div>
             </div>
         </div>
